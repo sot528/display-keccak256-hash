@@ -5,7 +5,7 @@
 <script src="https://unpkg.com/draggabilly@2/dist/draggabilly.pkgd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
 
-<title>foo</title>
+<title>keccak256 hash</title>
 <style>
   #dropzone {
     background-color: #cfc;
@@ -36,7 +36,8 @@
 </style>
 </head>
 <body>
-<div id="dropzone" effectAllowed="move">Drog files here!</div>
+<!-- thanks to http://jsfiddle.net/ginpei/bSF9z/ -->
+<div id="dropzone" effectAllowed="move">Drog files here! to display keccak256 hash.</div>
 <ul id="files"></ul>
 
 <script>
@@ -92,31 +93,21 @@
 
     for (var i=0, l=files.length; i<l; i++) {
       var file = files[i];
-      var elFile = buildElFile(file);
-      elFiles.appendChild(elFile);
+      var elFile = buildElFile(elFiles, file);
+
     }
   }
 
-  function buildElFile(file) {
+  function buildElFile(elFiles, file) {
     var reader = new FileReader();
     reader.readAsText( file );
     reader.addEventListener( 'load', function() {
       const digest = web3.utils.keccak256(reader.result)
+      var elFile = document.createElement('li');
+      var text = digest;
+      elFile.appendChild(document.createTextNode(text));
+      elFiles.appendChild(elFile);
     })
-
-    // var elFile = document.createElement('li');
-    // var text = file.name + ' (' + file.type + ',' + file.size + 'bytes)';
-    // elFile.appendChild(document.createTextNode(text));
-    //
-    // if (file.type.indexOf('image/') === 0) {
-    //   var elImage = document.createElement('img');
-    //   elImage.src = URL_BLANK_IMAGE;
-    //   elFile.appendChild(elImage);
-    //
-    //   attachImage(file, elImage);
-    // }
-
-    return elFile;
   }
 
   function attachImage(file, elImage) {
